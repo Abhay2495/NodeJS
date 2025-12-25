@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>SME Dashboard</title>
+  <script src="../Script/Tailwind.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body class="flex h-screen font-sans">
+
+  <!-- Sidebar -->
+  <div class="w-56 bg-gray-800 text-white flex-shrink-0 flex flex-col pt-8">
+    <h3 class="text-center text-xl mb-5">SME Panel</h3>
+    <a href="#" id="createTestLink" class="px-5 py-3 hover:bg-gray-700 transition-colors">Create Test</a>
+    <a href="#" id="checkQuestionAsPerCriteria" class="px-5 py-3 hover:bg-gray-700 transition-colors">Get Subject and concepts via Questions</a>
+    <a href="#" id="Profile" class="px-5 py-3 hover:bg-gray-700 transition-colors">Your Profile</a>
+    <!-- <a href="#" id="getAlltest">Get All Test</a> -->
+  </div>
+
+  <!-- Main content -->
+  <div class="flex-1 bg-gray-100 p-8 overflow-y-auto relative">
+
+    <!-- Top bar -->
+    <div class="fixed top-2 right-2 flex items-center gap-2 z-50">
+      <span class="font-semibold text-black">Hello:</span>
+      <button id="emailTrigger" class="cursor-pointer bg-transparent p-0 font-inherit">
+        <span id="userEmail"></span>
+      </button>
+
+      <!-- Dropdown menu -->
+      <div id="dropdownMenu" class="absolute left-0 mt-10 w-80 bg-white border border-gray-200 rounded shadow-lg hidden">
+        <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer" id="profile">My Profile</div>
+        <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer" id="settings">Settings</div>
+        <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer" id="logoutBtn">Logout</div>
+      </div>
+    </div>
+
+    <div>
+      <h2 class="text-2xl font-semibold mb-4">Welcome, <span id="userName"></span></h2>
+    </div>
+
+    <div id="subjectContainer"></div>
+
+    <button id="loadSubjectsBtn" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+      Load My Expert Subjects
+    </button>
+
+    <!-- Subjects List -->
+    <div id="subjectsBox" class="mt-4 hidden bg-white p-4 rounded shadow"></div>
+
+    <!-- Concepts List -->
+    <div id="conceptsBox" class="mt-4 hidden bg-white p-4 rounded shadow"></div>
+
+    <!-- Questions List -->
+    <div id="questionsBox" class="mt-4 hidden bg-white p-4 rounded shadow"></div>
+
+    <!-- Preview Section -->
+    <div id="previewSection" class="mt-4 hidden bg-white p-4 rounded shadow">
+      <h3 class="text-xl font-semibold mb-2">Preview</h3>
+      <div id="preview-box"></div>
+      <button id="submitPreviewBtn" class="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
+        Done
+      </button>
+    </div>
+
+  </div>
+
+  <script src="script/sme.js"></script>
+
+</body>
+
+</html>

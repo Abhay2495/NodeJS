@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Question Selector</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #counter {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .question {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Choose Questions (Max 30)</h2>
+<div id="counter">0/30</div>
+<div id="questions-container"></div>
+
+<script>
+$(document).ready(function() {
+    var MAX_SELECTION = 30;
+    var selectedCount = 0;
+
+    // Dynamically generate 100 questions
+    for (var i = 1; i <= 100; i++) {
+        $('#questions-container').append(
+            '<div class="question">' +
+            '<input type="checkbox" class="question-checkbox"> Question ' + i +
+            '</div>'
+        );
+    }
+
+    // Handle checkbox selection
+    $('.question-checkbox').on('change', function() {
+        if ($(this).is(':checked')) {
+            if (selectedCount < MAX_SELECTION) {
+                selectedCount++;
+            } else {
+                alert("You can select only 30 questions!");
+                $(this).prop('checked', false);
+            }
+        } else {
+            selectedCount--;
+        }
+
+        $('#counter').text(selectedCount + '/' + MAX_SELECTION);
+    });
+});
+</script>
+
+</body>
+</html>

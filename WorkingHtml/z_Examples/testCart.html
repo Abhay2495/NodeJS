@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        .chkOption {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #0d6efd;
+            /* modern browsers */
+        }
+    </style>
+</head>
+
+<body>
+     <div>
+        <div>Question Selected </div>
+        <p id="counter">Hello</p>
+
+        <div id="divQuestions"></div>
+        <hr />
+
+        <button id="btnFirst"> First</button> | <button id="btnPrevious"> Previous</button>|<button id="btnNext">
+            Next</button> |<button id="btnLast"> Last</button>
+    </div>
+
+    <script>
+        var thePage = 0;
+        var questionPerPage = 5;
+        var theCount=0;
+
+        function onCheckBoxChanged() {
+            console.log("checkbox event called");
+            let checkboxId = this.id;
+            let currentQuestionIndex = checkboxId - 1;
+            let checkboxValue = this.value;
+            let isChecked = this.checked;
+            let questions = JSON.parse(localStorage.getItem("testQuestions"));
+            questions[currentQuestionIndex].selected = isChecked;
+            localStorage.setItem("testQuestions", JSON.stringify(questions));
+
+            theCount=selectedQuestionsCount;
+            let allQuestions = JSON.parse(localStorage.getItem("testQuestions"));
+              questions = allQuestions.filter((question) => (question.selected === true));
+            let selectedQuestionsCount = questions.length;
+            $("#counter").text(selectedQuestionsCount);
+
+        }
+
+        function showQuestionsSelected(pageCount) {
+            var divQuestionList = $("#divQuestions");
+            if ($("#divQuestions").children().length !== 0) {
+                $("#divQuestions").empty();
+            }
+            let allQuestions = JSON.parse(localStorage.getItem("testQuestions"));
+            let questions = allQuestions.filter((question) => (question.selected === true));
+            let selectedQuestionsCount = questions.length;
+            console.log("select question count",selectedQuestionsCount);
+            questions.map((question) => {
+                let questionCheckBox = "<input type='checkbox' class='chkOption'" + "id=" + question.id + " " + (question.selected ? "checked" : "") + " /> " + question.title;
+                divQuestionList.append(questionCheckBox).append('<br/>');
+                //if event  is already attached , don't attach
+                $(".chkOption").off("change").on("change", onCheckBoxChanged);
+            });
+        }
+
+        $(document).ready(function () {
+            let allQuestions = JSON.parse(localStorage.getItem("testQuestions"));
+            let questions = allQuestions.filter((question) => (question.selected === true));
+            let selectedQuestionsCount = questions.length;
+            $("#counter").text(selectedQuestionsCount);
+           
+            showQuestionsSelected(thePage);
+            var btnClickme = $('#btnTestCart');
+            btnClickme.click(() => {
+                let questions = JSON.parse(localStorage.getItem("testQuestions"));
+                let selectedQuetions = questions.filter((question) => (question.selected === true));
+                let counterSpan=$("#counter");
+                counterSpan.value=selectedQuetions.length;
+                let divQuestionsCart = $("#divQuestionCart");
+                divQuestionsCart.empty();
+                selectedQuetions.map((question) => {
+                    let para = "<p>" + question.title + "</p>";
+                    divQuestionsCart.append(para);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

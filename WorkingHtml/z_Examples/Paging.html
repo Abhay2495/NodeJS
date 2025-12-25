@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <title>Multiple page code</title>
+</head>
+
+<body class="font-sans m-5 bg-gray-50">
+
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+        <h2 class="text-2xl font-bold mb-4">Questions List</h2>
+
+        <!-- Questions -->
+        <div id="questions-container" class="divide-y divide-gray-300"></div>
+
+        <!-- Navigation Buttons -->
+        <div class="mt-4 flex gap-2">
+            <button id="btnFirst" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">First</button>
+            <button id="btnPrevious" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Previous</button>
+            <button id="btnNext" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Next</button>
+            <button id="btnLast" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Last</button>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+
+            var questions = [];
+            var checkedQuestions = {};   // ✅ FIXED
+            var questionCountPerPage = 10;
+            var currentPage = 1;
+
+            // === LOAD QUESTIONS FROM API ===
+            function loadQuestions() {
+                $.ajax({
+                    url: "http://localhost:5238/api/questionbank/questions",
+                    method: "GET",
+                    success: function (data) {
+                        questions = data;
+                        renderPage(currentPage);
+                    },
+                    error: function () {
+                        alert("Failed to load questions!");
+                    }
+                });
+            }
+            loadQuestions();
+
+            // === RENDER QUESTIONS FOR A PAGE ===
+            function renderPage(page) {
+                $("#questions-container").empty();
+
+                let startIndex = (page - 1) * questionCountPerPage;
+                let endIndex = startIndex + questionCountPerPage;
+                let currentQuestionsForPage = questions.slice(startIndex, endIndex);
+
+                $.each(currentQuestionsForPage, function (index, currentQuestion) {
+                    let isChecked = checkedQuestions[currentQuestion.id] ? "checked" : "";
+
+                    $("#questions-container").append(`
+                        <div class="py-3">
+                            <label class="flex gap-2 items-center">
+                                <input type="checkbox"
+                                       class="questionsCheckBox"
+                                       value="${currentQuestion.id}"
+                                       ${isChecked}>
+                                ${startIndex + index + 1}. ${currentQuestion.title}
+                            </label>
+                        </div>
+                    `);
+                });
+            }
+
+            // === CHECKBOX STATE HANDLER (FIXED) ===
+            $(document).on("change", ".questionsCheckBox", function () {
+                let qid = $(this).val();
+                checkedQuestions[qid] = $(this).is(":checked");
+            });
+
+            // === BUTTON EVENTS ===
+            $("#btnFirst").click(function () {
+                currentPage = 1;
+                renderPage(currentPage);
+            });
+
+            $("#btnPrevious").click(function () {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderPage(currentPage);
+                }
+            });
+
+            $("#btnNext").click(function () {
+                let totalPages = Math.ceil(questions.length / questionCountPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderPage(currentPage);
+                }
+            });
+
+            $("#btnLast").click(function () {
+                currentPage = Math.ceil(questions.length / questionCountPerPage);
+                renderPage(currentPage);
+            });
+
+        });
+    </script>
+
+</body>
+</html>
